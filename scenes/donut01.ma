@@ -1,6 +1,6 @@
 //Maya ASCII 2024 scene
 //Name: donut01.ma
-//Last modified: Sun, Jan 21, 2024 06:32:02 PM
+//Last modified: Sun, Jan 21, 2024 06:35:36 PM
 //Codeset: UTF-8
 requires maya "2024";
 requires -nodeType "aiOptions" -nodeType "aiAOVDriver" -nodeType "aiAOVFilter" "mtoa" "5.3.4.1";
@@ -11,7 +11,7 @@ fileInfo "product" "Maya 2024";
 fileInfo "version" "2024";
 fileInfo "cutIdentifier" "202310181224-69282f2959";
 fileInfo "osv" "Mac OS X 14.2.1";
-fileInfo "UUID" "C2BC30CE-1043-9051-24D0-A3BCE7ADCE4F";
+fileInfo "UUID" "4976B42D-CA4D-7FDC-001C-8B89B837AFB1";
 createNode transform -s -n "persp";
 	rename -uid "F2221FCE-1C43-819B-8854-DD9D23B1489A";
 	setAttr ".v" no;
@@ -88,6 +88,19 @@ createNode mesh -n "pTorusShape1" -p "pTorus1";
 	setAttr ".dcc" -type "string" "Ambient+Diffuse";
 	setAttr ".covm[0]"  0 1 1;
 	setAttr ".cdvm[0]"  0 1 1;
+createNode transform -n "pCone1";
+	rename -uid "85D17708-AA47-5482-F0AC-BF997D3D235D";
+	setAttr ".t" -type "double3" -9.7244541110318181 0 0 ;
+createNode mesh -n "pConeShape1" -p "pCone1";
+	rename -uid "51B3E783-9249-0902-BC2A-A9810E114BDB";
+	setAttr -k off ".v";
+	setAttr ".vir" yes;
+	setAttr ".vif" yes;
+	setAttr ".uvst[0].uvsn" -type "string" "map1";
+	setAttr ".cuvs" -type "string" "map1";
+	setAttr ".dcc" -type "string" "Ambient+Diffuse";
+	setAttr ".covm[0]"  0 1 1;
+	setAttr ".cdvm[0]"  0 1 1;
 createNode lightLinker -s -n "lightLinker1";
 	rename -uid "3F90DBF5-B346-266D-CE6A-E9ACDA68F5DF";
 	setAttr -s 2 ".lnk";
@@ -121,9 +134,6 @@ createNode aiAOVDriver -s -n "defaultArnoldDisplayDriver";
 	setAttr ".output_mode" 0;
 createNode polyTorus -n "polyTorus1";
 	rename -uid "5C9C187C-4240-9D8A-682A-9BA784EE6BB0";
-createNode mayaUsdLayerManager -n "mayaUsdLayerManager1";
-	rename -uid "5F2217AA-6648-F47A-8851-08812AAE7B89";
-	setAttr ".sst" -type "string" "";
 createNode script -n "uiConfigurationScriptNode";
 	rename -uid "FBF62277-D048-C8DE-9D43-37B222B9703B";
 	setAttr ".b" -type "string" (
@@ -171,6 +181,12 @@ createNode script -n "sceneConfigurationScriptNode";
 	rename -uid "14E2B79B-FE41-E68A-6DAD-EAB56804165D";
 	setAttr ".b" -type "string" "playbackOptions -min 1 -max 120 -ast 1 -aet 200 ";
 	setAttr ".st" 6;
+createNode polyCone -n "polyCone1";
+	rename -uid "8A799F9B-6C4C-7B04-FAA7-78BD828F0E00";
+	setAttr ".cuv" 3;
+createNode mayaUsdLayerManager -n "mayaUsdLayerManager1";
+	rename -uid "AD0B4BBB-2046-06C2-EDC1-0E82E4CB8073";
+	setAttr ".sst" -type "string" "";
 select -ne :time1;
 	setAttr ".o" 1;
 	setAttr ".unw" 1;
@@ -193,6 +209,7 @@ select -ne :standardSurface1;
 	setAttr ".bc" -type "float3" 0.40000001 0.40000001 0.40000001 ;
 	setAttr ".sr" 0.5;
 select -ne :initialShadingGroup;
+	setAttr -s 2 ".dsm";
 	setAttr ".ro" yes;
 select -ne :initialParticleSE;
 	setAttr ".ro" yes;
@@ -215,6 +232,7 @@ select -ne :hardwareRenderGlobals;
 	setAttr ".ctrs" 256;
 	setAttr ".btrs" 512;
 connectAttr "polyTorus1.out" "pTorusShape1.i";
+connectAttr "polyCone1.out" "pConeShape1.i";
 relationship "link" ":lightLinker1" ":initialShadingGroup.message" ":defaultLightSet.message";
 relationship "link" ":lightLinker1" ":initialParticleSE.message" ":defaultLightSet.message";
 relationship "shadowLink" ":lightLinker1" ":initialShadingGroup.message" ":defaultLightSet.message";
@@ -227,4 +245,5 @@ connectAttr ":defaultArnoldFilter.msg" ":defaultArnoldRenderOptions.filt";
 connectAttr ":defaultArnoldDriver.msg" ":defaultArnoldRenderOptions.drvr";
 connectAttr "defaultRenderLayer.msg" ":defaultRenderingList1.r" -na;
 connectAttr "pTorusShape1.iog" ":initialShadingGroup.dsm" -na;
+connectAttr "pConeShape1.iog" ":initialShadingGroup.dsm" -na;
 // End of donut01.ma
